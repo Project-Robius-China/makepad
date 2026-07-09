@@ -1,12 +1,12 @@
 use std::io::{self, Read, Write};
 use std::time::Duration;
 
-#[cfg(target_os = "linux")]
+#[cfg(all(target_os = "linux", not(target_env = "ohos")))]
 pub struct SocketStream {
     inner: crate::backend::linux::socket_stream::SocketStream,
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(all(target_os = "linux", not(target_env = "ohos")))]
 impl SocketStream {
     pub fn connect(
         host: &str,
@@ -43,14 +43,14 @@ impl SocketStream {
     }
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(all(target_os = "linux", not(target_env = "ohos")))]
 impl Read for SocketStream {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         self.inner.read(buf)
     }
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(all(target_os = "linux", not(target_env = "ohos")))]
 impl Write for SocketStream {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         self.inner.write(buf)
@@ -240,10 +240,10 @@ impl Write for SocketStream {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(any(target_arch = "wasm32", all(target_os = "linux", target_env = "ohos")))]
 pub struct SocketStream;
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(any(target_arch = "wasm32", all(target_os = "linux", target_env = "ohos")))]
 impl SocketStream {
     pub fn connect(
         _host: &str,
@@ -275,7 +275,7 @@ impl SocketStream {
     pub fn shutdown(&mut self) {}
 }
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(any(target_arch = "wasm32", all(target_os = "linux", target_env = "ohos")))]
 impl Read for SocketStream {
     fn read(&mut self, _buf: &mut [u8]) -> io::Result<usize> {
         Err(io::Error::new(
@@ -285,7 +285,7 @@ impl Read for SocketStream {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(any(target_arch = "wasm32", all(target_os = "linux", target_env = "ohos")))]
 impl Write for SocketStream {
     fn write(&mut self, _buf: &[u8]) -> io::Result<usize> {
         Err(io::Error::new(

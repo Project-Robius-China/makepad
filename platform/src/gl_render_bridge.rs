@@ -121,7 +121,9 @@ impl GlRenderBridge {
 }
 
 // Cx methods: Linux
-#[cfg(target_os = "linux")]
+// OpenHarmony (target_env="ohos") reuses target_os="linux" but its CxOs has no
+// `opengl_cx` field (external-embedder GL bridge is desktop-only), so exclude it.
+#[cfg(all(target_os = "linux", not(target_env = "ohos")))]
 impl Cx {
     /// Create a GL rendering bridge wrapping makepad's existing EGL context.
     pub fn create_gl_render_bridge(&mut self) -> GlRenderBridge {

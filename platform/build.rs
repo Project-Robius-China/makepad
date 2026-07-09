@@ -169,7 +169,10 @@ fn main() {
         }
         "linux" => {
             println!("cargo:rustc-cfg=use_gles_3");
-            println!("cargo:rustc-link-lib=xkbcommon");
+            // OpenHarmony reuses target_os="linux" but has no libxkbcommon; skip it.
+            if !target.ends_with("-ohos") {
+                println!("cargo:rustc-link-lib=xkbcommon");
+            }
         }
         "android" => {
             println!("cargo:rustc-cfg=use_gles_3");
